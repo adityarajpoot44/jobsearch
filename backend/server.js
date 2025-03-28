@@ -37,6 +37,16 @@ app.post("/add-job", async (req, res) => {
 app.get('/jobs/search',getDataUserInput)
 app.get('/job/details',detailsjobview)
 
+app.get('/locations', async (req, res) => {
+  try {
+    const locations = await mongoose.connection.db.collection('jobs').distinct('location');
+    res.json(locations);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch locations' });
+  }
+});
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);

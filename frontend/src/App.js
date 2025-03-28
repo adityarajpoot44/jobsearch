@@ -4,12 +4,24 @@ import "./App.css";
 function App() {
   const [jobListings, setJobListings] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
-  const [searchLocation, setSearchLocation] = useState("");
+  const [locations, setLocations] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState("");
 
+  // Fetch available locations from backend
   useEffect(() => {
-    if (searchLocation.trim() === "") return;
+    fetch("http://localhost:3000/locations")
+      .then((response) => response.json())
+      .then((data) => {
+        setLocations(data);
+      })
+      .catch((error) => console.error("Error fetching locations:", error));
+  }, []);
 
-    fetch(`http://localhost:3000/jobs/search?location=${searchLocation}`)
+  // Fetch jobs based on selected location
+  useEffect(() => {
+    if (!selectedLocation) return;
+
+    fetch(`http://localhost:3000/jobs/search?location=${selectedLocation}`)
       .then((response) => response.json())
       .then((data) => {
         console.log("Fetched job listings:", data);
@@ -17,7 +29,7 @@ function App() {
         setSelectedJob(null);
       })
       .catch((error) => console.error("Error fetching job listings:", error));
-  }, [searchLocation]);
+  }, [selectedLocation]);
 
   return (
     <div className="flex h-screen p-6 bg-gray-100">
@@ -25,36 +37,44 @@ function App() {
       <div className="w-1/3 bg-white p-4 rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold mb-4 text-blue-700">Job Listings</h2>
 
-        {/* Search Box */}
-        <input
-          type="text"
-          placeholder="Search by location..."
+        {/* Location Dropdown */}
+        <select
           className="w-full p-3 mb-4 border rounded-lg text-gray-700"
-          value={searchLocation}
-          onChange={(e) => setSearchLocation(e.target.value)}
-        />
+          value={selectedLocation}
+          onChange={(e) => setSelectedLocation(e.target.value)}
+        >
+          <option value="">Select Location</option>
+          {locations.map((location, index) => (
+            <option key={index} value={location}>
+              {location}
+            </option>
+          ))}
+        </select>
 
-        {/* Job List */}
-        <div>
-          {jobListings.length > 0 ? (
-            jobListings.map((job) => (
-              <div
-                key={job.id}
-                className={`p-4 mb-3 border rounded-lg cursor-pointer transition ${
-                  selectedJob?.id === job.id ? "bg-blue-200" : "hover:bg-blue-100"
-                }`}
-                onClick={() => setSelectedJob(job)}
-              >
-                <h3 className="text-lg font-bold text-blue-900">{job.title}</h3>
-                <p className="text-gray-800 font-medium">{job.company} - {job.location}</p>
-            
-              </div>
-            ))
-          ) : (
-            <p className="text-gray-600">No jobs found for this location.</p>
-          )}
-        </div>
+              <div>
+        {jobListings?.length > 0 && (
+          jobListings.map((job, index) => (
+            <div
+              key={job._id || index}
+              className={`p-4 mb-3 border rounded-lg cursor-pointer transition ${
+                selectedJob?._id === job._id ? "bg-blue-200" : "hover:bg-blue-100"
+              }`}
+              onClick={() => setSelectedJob(job)}
+            >
+              <h3 className="text-lg font-bold text-blue-900">{job.title}</h3>
+              <p className="text-gray-800 font-medium">{job.company} - {job.location}</p>
+            </div>
+          ))
+        )}
       </div>
+      </div>
+
+
+
+          
+            
+          
+        
 
       {/* Right Section - Job Details */}
       {selectedJob && (
@@ -62,8 +82,6 @@ function App() {
           <div className="max-w-2xl mx-auto">
             <h2 className="text-3xl font-bold text-blue-900">{selectedJob.title}</h2>
             <p className="text-lg font-semibold text-gray-700">{selectedJob.company}</p>
-
-       
 
             {/* Job Details */}
             <div className="grid grid-cols-2 gap-4 mt-4">
@@ -95,14 +113,7 @@ function App() {
             <div className="mt-8">
               <h3 className="text-xl font-semibold text-gray-800">Job Description:</h3>
               <p className="text-gray-700 mt-2 leading-relaxed">
-              We are seeking a dedicated and motivated professional to join our team. 
-              The ideal candidate should have strong problem-solving skills, excellent communication, 
-              and the ability to work both independently and collaboratively. Responsibilities include 
-              executing tasks efficiently, meeting deadlines, and adapting to evolving work requirements.
-               A keen eye for detail, willingness to learn, and commitment to excellence are essential. 
-               The role requires time management, critical thinking, and the ability to handle multiple projects.
-                Prior experience in a relevant field is preferred but not mandatory. If you are passionate about 
-                growth and innovation, we encourage you to apply and be part of our team.
+                We are seeking a dedicated and motivated professional to join our team. The ideal candidate should have strong problem-solving skills, excellent communication, and the ability to work both independently and collaboratively. Responsibilities include executing tasks efficiently, meeting deadlines, and adapting to evolving work requirements. A keen eye for detail, willingness to learn, and commitment to excellence are essential. The role requires time management, critical thinking, and the ability to handle multiple projects. Prior experience in a relevant field is preferred but not mandatory. If you are passionate about growth and innovation, we encourage you to apply and be part of our team.
               </p>
             </div>
           </div>
