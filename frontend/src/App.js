@@ -47,7 +47,7 @@ function App() {
               >
                 <h3 className="text-lg font-bold text-blue-900">{job.title}</h3>
                 <p className="text-gray-800 font-medium">{job.company} - {job.location}</p>
-                <p className="text-gray-700">{job.salary || "Salary: Not disclosed"}</p>
+            
               </div>
             ))
           ) : (
@@ -63,10 +63,7 @@ function App() {
             <h2 className="text-3xl font-bold text-blue-900">{selectedJob.title}</h2>
             <p className="text-lg font-semibold text-gray-700">{selectedJob.company}</p>
 
-            {/* Rating */}
-            <p className="text-yellow-500 text-lg font-bold mt-1">
-              ⭐ {selectedJob.rating || "Not rated"}
-            </p>
+       
 
             {/* Job Details */}
             <div className="grid grid-cols-2 gap-4 mt-4">
@@ -74,16 +71,16 @@ function App() {
                 <strong>Location:</strong> {selectedJob.location || "Not specified"}
               </p>
               <p className="text-gray-600 text-md">
-                <strong>Employment Type:</strong> {selectedJob.employmentType || "Not specified"}
+                <strong>Employment Type:</strong> {selectedJob.employment_type || "Not specified"}
               </p>
               <p className="text-gray-500">
-                <strong>Posted:</strong> {selectedJob.postedTime || "N/A"}
+                <strong>Posted:</strong> {selectedJob.postedDateTime || "N/A"}
               </p>
               <p className="text-gray-600 text-md">
                 <strong>Source:</strong> {selectedJob.source || "Unknown"}
               </p>
               <p className="text-gray-600 text-md">
-                <strong>Experience Range:</strong> {selectedJob.experienceRange || "Not specified"}
+                <strong>Experience Range:</strong> {selectedJob.experience || "Not specified"}
               </p>
             </div>
 
@@ -98,7 +95,14 @@ function App() {
             <div className="mt-8">
               <h3 className="text-xl font-semibold text-gray-800">Job Description:</h3>
               <p className="text-gray-700 mt-2 leading-relaxed">
-                {selectedJob.fullDescription || "No description available."}
+              We are seeking a dedicated and motivated professional to join our team. 
+              The ideal candidate should have strong problem-solving skills, excellent communication, 
+              and the ability to work both independently and collaboratively. Responsibilities include 
+              executing tasks efficiently, meeting deadlines, and adapting to evolving work requirements.
+               A keen eye for detail, willingness to learn, and commitment to excellence are essential. 
+               The role requires time management, critical thinking, and the ability to handle multiple projects.
+                Prior experience in a relevant field is preferred but not mandatory. If you are passionate about 
+                growth and innovation, we encourage you to apply and be part of our team.
               </p>
             </div>
           </div>
