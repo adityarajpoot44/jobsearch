@@ -50,25 +50,27 @@ function App() {
           ))}
         </select>
 
-              {/* Scrollable Job Listings */}
-              <div>
-        {jobListings?.length > 0 && (
-          jobListings.map((job, index) => (
-            <div
-              key={job._id || index}
-              className={`p-4 mb-3 border rounded-lg cursor-pointer transition ${
-                selectedJob?._id === job._id ? "bg-blue-200" : "hover:bg-blue-100"
-              }`}
-              onClick={() => setSelectedJob(job)}
-            >
-              <h3 className="text-lg font-bold text-blue-900">{job.title}</h3>
-              <p className="text-gray-800 font-medium">{job.company} - {job.location}</p>
-            </div>
-          ))
-        )}
-      </div>
-
-
+        {/* Scrollable Job Listings */}
+        <div className="flex-1 overflow-y-auto">
+          {jobListings.length > 0 ? (
+            jobListings.map((job, index) => (
+              <div
+                key={job._id || index}
+                className={`p-4 mb-3 border rounded-lg cursor-pointer transition ${
+                  selectedJob?._id === job._id ? "bg-blue-200" : "hover:bg-blue-100"
+                }`}
+                onClick={() => setSelectedJob(job)}
+              >
+                <h3 className="text-lg font-bold text-blue-900">{job.title}</h3>
+                <p className="text-gray-800 font-medium">
+                  {job.company} - {job.location}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500 text-center">No jobs available</p>
+          )}
+        </div>
       </div>
 
       {/* Right Section - Job Details */}
