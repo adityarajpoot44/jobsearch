@@ -24,7 +24,6 @@ function App() {
     fetch(`http://localhost:3000/jobs/search?location=${selectedLocation}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log("Fetched job listings:", data);
         setJobListings(data);
         setSelectedJob(null);
       })
@@ -34,7 +33,7 @@ function App() {
   return (
     <div className="flex h-screen p-6 bg-gray-100">
       {/* Left Sidebar - Job Listings */}
-      <div className="w-1/3 bg-white p-4 rounded-lg shadow-lg">
+      <div className="w-1/3 bg-white p-4 rounded-lg shadow-lg flex flex-col">
         <h2 className="text-2xl font-semibold mb-4 text-blue-700">Job Listings</h2>
 
         {/* Location Dropdown */}
@@ -51,6 +50,7 @@ function App() {
           ))}
         </select>
 
+              {/* Scrollable Job Listings */}
               <div>
         {jobListings?.length > 0 && (
           jobListings.map((job, index) => (
@@ -67,18 +67,13 @@ function App() {
           ))
         )}
       </div>
+
+
       </div>
-
-
-
-          
-            
-          
-        
 
       {/* Right Section - Job Details */}
       {selectedJob && (
-        <div className="w-2/3 ml-6 bg-white p-8 rounded-lg shadow-lg flex flex-col justify-center">
+        <div className="w-2/3 ml-6 bg-white p-8 rounded-lg shadow-lg overflow-auto">
           <div className="max-w-2xl mx-auto">
             <h2 className="text-3xl font-bold text-blue-900">{selectedJob.title}</h2>
             <p className="text-lg font-semibold text-gray-700">{selectedJob.company}</p>
@@ -113,7 +108,8 @@ function App() {
             <div className="mt-8">
               <h3 className="text-xl font-semibold text-gray-800">Job Description:</h3>
               <p className="text-gray-700 mt-2 leading-relaxed">
-                We are seeking a dedicated and motivated professional to join our team. The ideal candidate should have strong problem-solving skills, excellent communication, and the ability to work both independently and collaboratively. Responsibilities include executing tasks efficiently, meeting deadlines, and adapting to evolving work requirements. A keen eye for detail, willingness to learn, and commitment to excellence are essential. The role requires time management, critical thinking, and the ability to handle multiple projects. Prior experience in a relevant field is preferred but not mandatory. If you are passionate about growth and innovation, we encourage you to apply and be part of our team.
+                {selectedJob.description ||
+                  "No description available for this job. Please check the official listing for more details."}
               </p>
             </div>
           </div>
