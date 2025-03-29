@@ -4,18 +4,10 @@ import "./App.css";
 function App() {
   const [jobListings, setJobListings] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
-  const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:3000/locations")
-      .then((response) => response.json())
-      .then((data) => setLocations(data))
-      .catch((error) => console.error("Error fetching locations:", error));
-  }, []);
-
-  useEffect(() => {
-    if (!selectedLocation) return;
+    if (!selectedLocation.trim()) return; // Prevent unnecessary fetch calls
     fetch(`http://localhost:3000/jobs/search?location=${selectedLocation}`)
       .then((response) => response.json())
       .then((data) => {
@@ -29,18 +21,16 @@ function App() {
     <div className="flex h-screen p-6 bg-gradient-to-r from-blue-50 to-indigo-100">
       <div className="w-1/3 bg-white p-5 rounded-lg shadow-xl flex flex-col">
         <h2 className="text-2xl font-semibold mb-4 text-indigo-800 text-center">Job Listings</h2>
-        <select
+
+        {/* Text Input for Typing Location */}
+        <input
+          type="text"
           className="w-full p-3 mb-4 border rounded-lg bg-indigo-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
           value={selectedLocation}
           onChange={(e) => setSelectedLocation(e.target.value)}
-        >
-          <option value="">Select Location</option>
-          {locations.map((location, index) => (
-            <option key={index} value={location}>
-              {location}
-            </option>
-          ))}
-        </select>
+          placeholder="Type a location..."
+        />
+
         <div className="flex-1 overflow-y-auto">
           {jobListings.length > 0 ? (
             jobListings.map((job, index) => (
