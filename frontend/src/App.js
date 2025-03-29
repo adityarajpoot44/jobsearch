@@ -84,7 +84,12 @@ export default function JobSearch() {
             <div className="mt-4 bg-gray-100 p-4 rounded-lg">
               <p className="text-gray-700"><strong>Experience:</strong> {selectedJob.experience}</p>
               <p className="text-gray-700"><strong>Source:</strong> {selectedJob.source}</p>
-              <p className="text-gray-700"><strong>Date of Posting:</strong> {selectedJob.postedDateTime}</p>
+              <p className="text-gray-700"><strong>Date of Posting:</strong>{" "}{new Date(selectedJob.postedDateTime).toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                })}
+              </p>
               <p className="text-gray-700"><strong>Employment Type:</strong> {selectedJob.employment_type}</p>
             </div>
             <div className="mt-4">
