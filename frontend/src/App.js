@@ -25,9 +25,9 @@ export default function JobSearch() {
   };
 
   return (
-    <div className="flex h-screen p-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+    <div className="flex flex-col md:flex-row gap-3 h-full p-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
       {/* Left Side - Job Listings */}
-      <div className="w-1/2 bg-white p-6 shadow-lg rounded-lg text-black">
+      <div className="w-full md:w-1/2 bg-white p-6 shadow-lg h-screen rounded-lg text-black ">
         <h2 className="text-2xl font-bold mb-4 text-center text-gray-700">Find Your Dream Job</h2>
         <input
           type="text"
@@ -75,7 +75,7 @@ export default function JobSearch() {
       </div>
 
       {/* Right Side - Job Details */}
-      <div className="w-1/2 bg-white p-6 shadow-lg rounded-lg ml-6 text-black">
+      <div className="w-full h-screen md:w-1/2 bg-white p-6 shadow-lg rounded-lg text-black">
         {selectedJob ? (
           <div className="w-full">
             <h2 className="text-3xl font-bold mb-3 text-gray-800 border-b pb-2">{selectedJob.title}</h2>
