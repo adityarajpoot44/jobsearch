@@ -1,67 +1,68 @@
 import Job from "../models/job.js";
 import fs from "fs";
 import path from "path";
-const insertJobData = async (dataArray) => {
 
-    console.log("Received Data:", dataArray);
-    try {
-        const filePath = path.join(process.cwd(), "controller", "data.json");
+const insertJobData = async () => {
+  try {
+    const filePath = path.join(process.cwd(), "controller", "data.json");
 
-        const rawData = fs.readFileSync(filePath, "utf-8");
+    if (!fs.existsSync(filePath)) {
+      console.error("Error: data.json file not found!");
+      return;
+    }
 
-    console.log("Raw JSON data:", rawData);
+    const rawData = fs.readFileSync(filePath, "utf-8");
+    console.log("Raw JSON data loaded.");
 
     let jobDataArray;
-
     try {
-      jobDataArray = JSON.parse(rawData); 
+      jobDataArray = JSON.parse(rawData);
     } catch (parseError) {
       console.error("Error parsing JSON file:", parseError);
       return;
     }
 
-    console.log("Parsed JSON data:", jobDataArray);
-    console.log("Type of jobDataArray:", typeof jobDataArray);
-
     if (!Array.isArray(jobDataArray)) {
-      console.log("Expected an array but got:", jobDataArray);
+      console.error("Invalid JSON format: Expected an array.");
       return;
     }
 
-    const jobEntries = jobDataArray.map((data) => ({
-        jobID: typeof data.jobID === "object" && data.jobID.$numberLong
-        ? data.jobID.$numberLong.toString()  
-        : data.jobID || `job_${Date.now()}`,
-        title: data.title || "Unknown",
-        company: data.company || "Unknown",
-        location: data.location || "Remote",
-        job_link: data.job_link || "https://example.com",
-        employment_type: data.employment_type || "Full-time",
-        experience: data.experience || "0-1 Years",
-        source: data.source || "Unknown",
-        country: data.country || "Unknown",
-        postedDateTime: data.postedDateTime?.$date
-          ? new Date(data.postedDateTime.$date)
-          : new Date(),
-      
+    console.log(`Processing ${jobDataArray.length} job entries...`);
 
-        companyImageUrl: typeof data.companyImageUrl === "object" 
-          ? "https://default-image.com/logo.png" 
-          : data.companyImageUrl || "https://default-image.com/logo.png",
-      
-        min_exp: data.min_exp ?? 0,
-        max_exp: data.max_exp ?? 0,
+    const jobEntries = jobDataArray.map((data) => ({
+      jobID: String(data?.jobID?.$numberLong || data?.jobID || `job_${Date.now()}`),
+      title: data?.title?.trim() || "Not Provided",
+      company: data?.company?.trim() || "Not Disclosed",
+      location: data?.location?.trim() || "Remote",
+      job_link: data?.job_link || "https://example.com",
+      employment_type: data?.employment_type || "Full-time",
+      experience: data?.experience || "0-1 Years",
+      source: data?.source || "Unknown",
+      country: data?.country || "Unknown",
+      postedDateTime: data?.postedDateTime?.$date ? new Date(data.postedDateTime.$date) : new Date(),
+      companyImageUrl: typeof data?.companyImageUrl === "object" ? "https://default-image.com/logo.png" : data.companyImageUrl || "https://default-image.com/logo.png",
+      min_exp: Number(data?.min_exp) || 0,
+      max_exp: Number(data?.max_exp) || 0,
     }));
 
-    console.log(`Inserting ${jobEntries.length} job entries...`);
+    // Remove duplicates
+    const existingJobs = new Set(await Job.distinct("jobID"));
+    const uniqueJobs = jobEntries.filter(job => !existingJobs.has(job.jobID));
+    console.log(`Unique jobs after filtering: ${uniqueJobs.length}`);
 
-
-    await Job.insertMany(jobEntries);
+    // Insert in batches
+    const batchSize = 100;
+    for (let i = 0; i < uniqueJobs.length; i += batchSize) {
+      const batch = uniqueJobs.slice(i, i + batchSize);
+      await Job.insertMany(batch, { ordered: false }); // Insert batch
+      console.log(`Inserted batch ${i / batchSize + 1}/${Math.ceil(uniqueJobs.length / batchSize)}`);
+    }
 
     console.log("All jobs inserted successfully!");
+
   } catch (error) {
-    console.error("Error reading or inserting jobs:", error);
+    console.error("Error processing job data:", error);
   }
-    };
+};
 
 export default insertJobData;

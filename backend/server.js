@@ -24,11 +24,14 @@ connectDB();
 
 app.post("/add-job", async (req, res) => {
   try {
-    console.log(req.body)
-    await insertJobData(req.body);
-    res.status(201).json({ message: "Job added successfully!" });
+    console.log("Adding jobs from file...");
+
+    await insertJobData();  
+
+    res.status(201).json({ message: "Jobs added successfully from file!" });
   } catch (error) {
-    res.status(500).json({ error: "Failed to add job" });
+    console.error("Error adding job:", error);
+    res.status(500).json({ error: "Failed to add jobs" });
   }
 });
 
