@@ -8,14 +8,14 @@ export default function JobSearch() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:3000/locations")
+    fetch(`${process.env.REACT_API_BASE_URL}/locations`)
       .then((res) => res.json())
       .then((data) => setLocations([...new Set(data)]));
   }, []);
 
   const handleSearch = () => {
     setLoading(true);
-    fetch(`http://localhost:3000/jobs/search?location=${location}`)
+    fetch(`${process.env.REACT_API_BASE_URLAPI_BASE_URL}/jobs/search?location=${location}`)
       .then((res) => res.json())
       .then((data) => {
         const uniqueJobs = Array.from(new Map(data.map(job => [job._id, job])).values());
