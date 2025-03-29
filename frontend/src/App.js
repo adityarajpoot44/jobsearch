@@ -7,7 +7,7 @@ function App() {
   const [selectedLocation, setSelectedLocation] = useState("");
 
   useEffect(() => {
-    if (!selectedLocation.trim()) return; // Prevent unnecessary fetch calls
+    if (!selectedLocation.trim()) return; 
     fetch(`http://localhost:3000/jobs/search?location=${selectedLocation}`)
       .then((response) => response.json())
       .then((data) => {
@@ -22,7 +22,7 @@ function App() {
       <div className="w-1/3 bg-white p-5 rounded-lg shadow-xl flex flex-col">
         <h2 className="text-2xl font-semibold mb-4 text-indigo-800 text-center">Job Listings</h2>
 
-        {/* Text Input for Typing Location */}
+        
         <input
           type="text"
           className="w-full p-3 mb-4 border rounded-lg bg-indigo-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
@@ -54,19 +54,19 @@ function App() {
       {selectedJob && (
         <div className="w-2/3 ml-6 bg-white p-8 rounded-lg shadow-xl overflow-auto border border-gray-200">
           <div className="max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold text-indigo-900 text-center mb-6">{selectedJob.title}</h2>
-            <div className="grid grid-cols-2 gap-4 mb-6">
+            <h2 className="text-3xl font-bold text-indigo-900 text-center mb-12">{selectedJob.title}</h2>
+            <div className="grid grid-cols-2 gap-4 mb-25">
               <p className="text-gray-600 text-md"><strong>Company:</strong> <span className="text-pink-600">{selectedJob.company || "Not specified"}</span></p>
               <p className="text-gray-600 text-md"><strong>Location:</strong> {selectedJob.location || "Not specified"}</p>
               <p className="text-gray-600 text-md"><strong>Employment Type:</strong> {selectedJob.employment_type || "Not specified"}</p>
               <p className="text-gray-600 text-md">
                 <strong>Posted:</strong> {selectedJob.postedDateTime ? selectedJob.postedDateTime.split("T")[0] : "N/A"}
               </p>
-              <p className="text-gray-600 text-md"><strong>Source:</strong> {selectedJob.source || "Unknown"}</p>
+              <p className="text-gray-600 text-md mb-6"><strong>Source:</strong> {selectedJob.source || "Unknown"}</p>
               <p className="text-gray-600 text-md"><strong>Experience Range:</strong> {selectedJob.experience || "Not specified"}</p>
             </div>
             <div className="mt-6">
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">Job Description:</h3>
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">Job Description:</h3>
               <p className="text-gray-700 leading-relaxed">
                 {selectedJob.description ||
                   "This role requires strong problem-solving skills, effective communication, and the ability to work both independently and collaboratively. Responsibilities include analyzing requirements, executing tasks efficiently, and ensuring high-quality deliverables. Candidates should have a proactive approach to learning and adapting to new challenges. Attention to detail, time management, and a results-driven mindset are key attributes for success in this position."}
