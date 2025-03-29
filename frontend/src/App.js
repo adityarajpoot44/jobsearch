@@ -75,9 +75,9 @@ export default function JobSearch() {
       </div>
 
       {/* Right Side - Job Details */}
-      <div className="w-full h-screen md:w-1/2 bg-white p-6 shadow-lg rounded-lg text-black">
+      <div className="w-full md:w-1/2 bg-white p-6 shadow-lg rounded-lg text-black">
         {selectedJob ? (
-          <div className="w-full">
+          <div className="w-full h-full">
             <h2 className="text-3xl font-bold mb-3 text-gray-800 border-b pb-2">{selectedJob.title}</h2>
             <p className="text-lg font-semibold text-gray-700">{selectedJob.company}</p>
             <p className="text-gray-600 mb-2">📍 {selectedJob.location}</p>
